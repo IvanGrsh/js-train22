@@ -2,6 +2,24 @@
 
 // Клас Writer відповідає за роботу з текстом.
 class Writer {
+  #content = "";
+
+  set content(newContent) {
+    this.#content = newContent;
+    this.#store();
+  }
+
+  get content() {
+    return this.#content;
+  }
+
+  #store() {
+    Version.create(this.content);
+  }
+
+  restore() {
+    this.#content = Version.restore().content;
+  }
   // Властивість #content представляє поточний текст. Вона ініціалізується порожнім рядком.
   // Сетер для властивості content. Він приймає значення newContent (новий текст),
   // який потрібно встановити як поточний текст. Кожен раз, коли присвоюється нове значення,
@@ -15,6 +33,19 @@ class Writer {
 
 // Клас Version відповідає за створення та зберігання версій тексту.
 class Version {
+  constructor(content) {
+    this.content = content;
+  }
+  static #versions = [];
+
+  static create(content) {
+    this.#versions.push(new Version(content));
+  }
+
+  static restore() {
+    this.#versions.pop();
+    return this.#versions[this.#versions.length - 1];
+  }
   // В конструкторі класу Version приймається аргумент content та встановлює його.
   // Це вхідний аргумент, який представляє теку збережену версію тексту.
   // Властивість #versions це приватний статичний масив, пустий за замовчуванням, що зберігає всі створені версії.
@@ -27,20 +58,20 @@ console.log("Завдання 5 ====================================");
 // Після виконання розкоментуйте код нижче
 
 // Створюємо новий екземпляр класу Writer
-// const writer = new Writer();
+const writer = new Writer();
 
 // Присвоюємо текст за допомогою сетера
-// writer.content = "Це початковий текст.";
-// writer.content = "Редагований текст.";
-// writer.content = "Оновлений текст.";
+writer.content = "Це початковий текст.";
+writer.content = "Редагований текст.";
+writer.content = "Оновлений текст.";
 
 // Друкуємо поточний текст
-// console.log(writer.content);
+console.log(writer.content);
 
 // Відновлюємо попередній текст
-// writer.restore();
-// console.log(writer.content);
+writer.restore();
+console.log(writer.content);
 
 // Ще раз відновлюємо попередній текст
-// writer.restore();
-// console.log(writer.content);
+writer.restore();
+console.log(writer.content);
